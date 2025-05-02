@@ -1,12 +1,52 @@
-# React + Vite
+# NextOnList - Your Ultimate Entertainment Hub
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+NextOnList is a modern web application built with React and Vite that helps you discover and explore movies, TV shows, and anime. With an intuitive interface and powerful features, it's your one-stop destination for all entertainment needs.
 
-Currently, two official plugins are available:
+## 🌟 Features
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Babel](https://babeljs.io/) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+- **Multi-Category Browse**: Explore movies, TV shows, and anime all in one place
+- **Smart Search**: Find content across all categories with intelligent search functionality
+- **AI-Powered Recommendations**: Get personalized suggestions through our chatbot assistant
+- **Trending Content**: Stay updated with what's popular in each category
+- **Detailed Information**: Access comprehensive details about any title including:
+  - Ratings and reviews
+  - Cast information
+  - Episode guides
+  - Release dates
+  - Plot summaries
 
-## Expanding the ESLint configuration
+## 🚀 Key Sections
 
-If you are developing a production application, we recommend using TypeScript with type-aware lint rules enabled. Check out the [TS template](https://github.com/vitejs/vite/tree/main/packages/create-vite/template-react-ts) for information on how to integrate TypeScript and [`typescript-eslint`](https://typescript-eslint.io) in your project.
+### Movies
+- Top Rated Movies
+- New Releases
+- Coming Soon / Teasers
+
+### TV Shows
+- Top Rated Shows
+- Based on True Stories
+- Curated Picks
+
+### Anime
+- Popular Anime
+- Seasonal Shows
+- Personal Favorites
+- Hidden Gems
+
+## 💻 Technical Stack
+
+- **Frontend**: React + Vite
+- **Routing**: React Router
+- **APIs**: 
+  - TMDB (The Movie Database) for movies and TV shows
+  - Jikan API for anime content
+  - Gemini API for chatbot functionality
+- **Styling**: Custom CSS with modern design principles
+
+## 🛠️ Getting Started
+
+1. Clone the repository
+2. Install dependencies:
+```bash
+npm install
+```
