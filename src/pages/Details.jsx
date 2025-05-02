@@ -13,13 +13,13 @@ function Details() {
       try {
         let response;
         if (type === 'anime') {
-          // Enhanced Jikan API query for anime details
+          
           const animeId = parseInt(id);
           if (isNaN(animeId)) {
             throw new Error('Invalid anime ID');
           }
 
-          // Fetch anime details from Jikan API
+        
           response = await fetch(`https://api.jikan.moe/v4/anime/${animeId}/full`);
           await new Promise(resolve => setTimeout(resolve, 1000)); // Add delay to avoid rate limiting
           
@@ -29,7 +29,7 @@ function Details() {
             throw new Error('Anime not found');
           }
 
-          // Transform Jikan data to match our existing structure
+          
           const anime = data.data;
           setDetails({
             id: anime.mal_id,
@@ -76,9 +76,9 @@ function Details() {
             } : null
           });
 
-          // Fetch characters
+          
           const charactersResponse = await fetch(`https://api.jikan.moe/v4/anime/${animeId}/characters`);
-          await new Promise(resolve => setTimeout(resolve, 1000)); // Add delay to avoid rate limiting
+          await new Promise(resolve => setTimeout(resolve, 1000)); 
           const charactersData = await charactersResponse.json();
           
           if (charactersData.data) {
@@ -110,9 +110,9 @@ function Details() {
             }));
           }
 
-          // Fetch recommendations
+      
           const recommendationsResponse = await fetch(`https://api.jikan.moe/v4/anime/${animeId}/recommendations`);
-          await new Promise(resolve => setTimeout(resolve, 1000)); // Add delay to avoid rate limiting
+          await new Promise(resolve => setTimeout(resolve, 1000)); 
           const recommendationsData = await recommendationsResponse.json();
           
           if (recommendationsData.data) {
@@ -136,7 +136,7 @@ function Details() {
             }));
           }
         } else {
-          // Use TMDB API for movies and TV shows
+        
           const TMDB_BASE_URL = 'https://api.themoviedb.org/3';
           const BEARER_TOKEN = import.meta.env.VITE_TMDB_BEARER_TOKEN;
           
@@ -152,7 +152,7 @@ function Details() {
           const data = await response.json();
           setDetails(data);
 
-          // Fetch episode ratings for TV shows
+          
           if (type === 'tv') {
             const seasons = data.number_of_seasons || 1;
             const seasonRatings = {};
@@ -200,9 +200,7 @@ function Details() {
           />
         )}
         
-        {/* Removed trailer section */}
-
-        {/* Rest of the existing details header content */}
+    
         <img 
           src={
             type === 'anime'
@@ -363,14 +361,14 @@ function Details() {
                 </div>
               </div>
 
-              {/* Add Episode Ratings Section */}
+              
               <div className="episodes">
                 <h3>Episode Ratings</h3>
                 {details.episodes > 0 ? (
                   <div className="episode-grid">
                     {Array.from({ length: details.episodes }, (_, i) => ({
                       episode_number: i + 1,
-                      vote_average: (Math.random() * 2 + 7).toFixed(1) // Placeholder rating between 7-9
+                      vote_average: (Math.random() * 2 + 7).toFixed(1) 
                     })).map((episode) => (
                       <div key={episode.episode_number} className="episode-rating-card">
                         <div className="episode-number">
@@ -418,7 +416,7 @@ function Details() {
             </>
           )}
 
-          {/* Only render cast section for movies and TV shows */}
+         
           {type !== 'anime' && details.credits && (
             <div className="cast">
               <h3>Main Cast</h3>

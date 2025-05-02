@@ -8,12 +8,12 @@ const headers = {
 
 export const searchContent = async (query, type = 'multi') => {
   try {
-    // Extract genre or category from query
+    
     const searchQuery = query.toLowerCase().trim();
     let apiUrl = `${TMDB_BASE_URL}/search/${type}`;
     let params = `query=${encodeURIComponent(searchQuery)}`;
 
-    // Handle specific genre searches
+   
     if (searchQuery.includes('horror')) {
       apiUrl = `${TMDB_BASE_URL}/discover/movie`;
       params = 'with_genres=27&sort_by=popularity.desc&include_adult=false&language=en-US&page=1';
@@ -31,7 +31,6 @@ export const searchContent = async (query, type = 'multi') => {
     const response = await fetch(`${apiUrl}?${params}`, { headers });
     const data = await response.json();
     
-    // Add media_type to results for proper UI handling
     if (data.results) {
       data.results = data.results.map(item => ({
         ...item,

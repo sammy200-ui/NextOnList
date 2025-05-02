@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import AnimeList from "../components/AnimeList";
-import { getAnimeCategories } from "../api/jikan";  // Updated import path
+import { getAnimeCategories } from "../api/jikan";  
 import { useNavigate } from "react-router-dom";
 
 function Anime({ searchResults }) {
@@ -113,7 +113,7 @@ function Anime({ searchResults }) {
       }
     } catch (error) {
       console.error('Error fetching anime categories:', error);
-      // Set default categories with personal favorites only
+    
       setCategories({
         topRated: [],
         seasonal: [],
@@ -126,7 +126,7 @@ function Anime({ searchResults }) {
 
   useEffect(() => {
     fetchAnimeCategories();
-    // Refresh content every 30 minutes
+    // Refresh content every 30 minutes only on home page
     const refreshInterval = setInterval(fetchAnimeCategories, 30 * 60 * 1000);
     return () => clearInterval(refreshInterval);
   }, []);

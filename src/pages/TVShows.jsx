@@ -25,7 +25,7 @@ function TVShows({ searchResults }) {
 
   useEffect(() => {
     fetchTVShowCategories();
-    // Refresh content every 30 minutes
+   
     const refreshInterval = setInterval(fetchTVShowCategories, 30 * 60 * 1000);
     return () => clearInterval(refreshInterval);
   }, []);

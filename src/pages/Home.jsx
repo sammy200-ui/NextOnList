@@ -20,13 +20,13 @@ function Home({ searchResults, trendingRefs, scrollContent }) {
 
   useEffect(() => {
     fetchTrending();
-    // Refresh trending content every 30 minutes
+   
     const refreshInterval = setInterval(fetchTrending, 30 * 60 * 1000);
 
     return () => clearInterval(refreshInterval);
   }, []);
 
-  // Update the search results section
+  
   if (searchResults?.length > 0) {
     const movies = searchResults.filter(item => item.media_type === 'movie');
     const tvShows = searchResults.filter(item => item.media_type === 'tv');

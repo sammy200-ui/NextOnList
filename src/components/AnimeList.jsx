@@ -7,7 +7,7 @@ function AnimeList({ animeList }) {
   return (
     <div className="content-grid">
       {animeList?.map((anime) => {
-        // Handle both TMDB and AniList data formats
+       
         const title = anime.title?.english || anime.title?.romaji || anime.name;
         const description = anime.description || anime.overview;
         const year = anime.startDate?.year || anime.first_air_date?.split('-')[0];
@@ -21,7 +21,7 @@ function AnimeList({ animeList }) {
             key={animeId} 
             className="anime-card"
             onClick={() => {
-              // Add a small delay before navigation to ensure proper state updates
+             
               setTimeout(() => navigate(`/anime/${animeId}`), 100);
             }}
             style={{ cursor: 'pointer' }}

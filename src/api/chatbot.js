@@ -2,8 +2,8 @@ const GEMINI_API_URL = 'https://generativelanguage.googleapis.com/v1beta/models/
 
 export const getChatbotResponse = async (prompt) => {
   try {
-    console.log("📨 Sending request with prompt:", prompt);
-    console.log("🔑 Using API key:", import.meta.env.VITE_GEMINI_API_KEY);
+    console.log(" Sending request with prompt:", prompt);
+    console.log(" Using API key:", import.meta.env.VITE_GEMINI_API_KEY);
 
     const response = await fetch(`${GEMINI_API_URL}?key=${import.meta.env.VITE_GEMINI_API_KEY}`, {
       method: 'POST',
@@ -48,12 +48,12 @@ export const getChatbotResponse = async (prompt) => {
 
     if (!response.ok) {
       const errorText = await response.text(); // get raw error
-      console.error("❌ API error response:", errorText);
+      console.error(" API error response:", errorText);
       throw new Error(`API request failed: ${response.status}`);
     }
 
     const data = await response.json();
-    console.log("✅ API response data:", data);
+    console.log(" API response data:", data);
 
     const suggestion = data.candidates?.[0]?.content?.parts?.[0]?.text?.trim();
 
@@ -63,7 +63,7 @@ export const getChatbotResponse = async (prompt) => {
 
     return suggestion;
   } catch (error) {
-    console.error('🚨 Chatbot error:', error);
+    console.error(' Chatbot error:', error);
     throw new Error('Sorry, I am unable to process your request at the moment. Please try again later.');
   }
 };
