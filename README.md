@@ -6,7 +6,6 @@ NextOnList is a modern web application built with React and Vite that helps you 
 
 - **Multi-Category Browse**: Explore movies, TV shows, and anime all in one place
 - **Smart Search**: Find content across all categories with intelligent search functionality
-- **AI-Powered Recommendations**: Get personalized suggestions through our chatbot assistant
 - **Trending Content**: Stay updated with what's popular in each category
 - **Detailed Information**: Access comprehensive details about any title including:
   - Ratings and reviews
@@ -40,7 +39,6 @@ NextOnList is a modern web application built with React and Vite that helps you 
 - **APIs**: 
   - TMDB (The Movie Database) for movies and TV shows
   - Jikan API for anime content
-  - Gemini API for chatbot functionality
 - **Styling**: Custom CSS with modern design principles
 
 ## 🛠️ Getting Started

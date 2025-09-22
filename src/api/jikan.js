@@ -9,9 +9,13 @@ const fetchJikan = async (endpoint) => {
     
     // Handle rate limiting
     if (response.status === 429) {
-      // Wait for 1 second before retrying
+      // Wait for 2 seconds before retrying
       await delay(2000);
       return fetchJikan(endpoint);
+    }
+    
+    if (!response.ok) {
+      throw new Error(`HTTP error! status: ${response.status}`);
     }
     
     const data = await response.json();
@@ -24,25 +28,18 @@ const fetchJikan = async (endpoint) => {
 
 export const getAnimeCategories = async () => {
   try {
-    // Add delays between requests to avoid rate limiting
-    const topRatedResponse = await fetch('https://api.jikan.moe/v4/top/anime?filter=bypopularity');
-    await delay(2000); // Wait 2 second between requests
+    // Use the fetchJikan helper with proper rate limiting
+    const topRatedData = await fetchJikan('/top/anime?filter=bypopularity');
+    await delay(1000); // Wait 1 second between requests
     
-    const seasonalResponse = await fetch('https://api.jikan.moe/v4/seasons/now');
-    await delay(2000); // Wait 2 second between requests
+    const seasonalData = await fetchJikan('/seasons/now');
+    await delay(1000); // Wait 1 second between requests
     
-    const hiddenGemsResponse = await fetch('https://api.jikan.moe/v4/top/anime?filter=favorite');
-    
-  
-    const [topRatedData, seasonalData, hiddenGemsData] = await Promise.all([
-      topRatedResponse.json(),
-      seasonalResponse.json(),
-      hiddenGemsResponse.json()
-    ]);
+    const hiddenGemsData = await fetchJikan('/top/anime?filter=favorite');
 
     
     return {
-      topRated: topRatedData.data.map(anime => ({
+      topRated: topRatedData.map(anime => ({
         id: anime.mal_id,
         title: {
           english: anime.title_english || anime.title,
@@ -57,7 +54,7 @@ export const getAnimeCategories = async () => {
         },
         averageScore: anime.score * 10
       })),
-      seasonal: seasonalData.data.map(anime => ({
+      seasonal: seasonalData.map(anime => ({
         id: anime.mal_id,
         title: {
           english: anime.title_english || anime.title,
@@ -72,7 +69,7 @@ export const getAnimeCategories = async () => {
         },
         averageScore: anime.score * 10
       })),
-      hiddenGems: hiddenGemsData.data.map(anime => ({
+      hiddenGems: hiddenGemsData.map(anime => ({
         id: anime.mal_id,
         title: {
           english: anime.title_english || anime.title,
@@ -90,6 +87,10 @@ export const getAnimeCategories = async () => {
     };
   } catch (error) {
     console.error('Error fetching anime categories:', error);
-    throw error;
+    return {
+      topRated: [],
+      seasonal: [],
+      hiddenGems: []
+    };
   }
 };

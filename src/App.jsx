@@ -2,7 +2,6 @@ import React, { useState, useRef } from 'react';
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 import Navbar from './components/Navbar';
 import SearchBar from './components/SearchBar';
-import Chatbot from './components/Chatbot';
 import Home from './pages/Home';
 import { searchContent } from './api/tmdb';
 import './App.css';
@@ -24,10 +23,6 @@ function App() {
     setSearchResults(results.results || []);
   };
 
-  const handleChatbotSuggestion = (suggestion) => {
-    handleSearch(suggestion);
-  };
-
   const scrollContent = (direction, section) => {
     const container = trendingRefs[section].current;
     if (container) {
@@ -42,22 +37,19 @@ function App() {
         <Navbar />
         <SearchBar onSearch={handleSearch} />
         <div className="main-content">
-          <div className="content-area">
-            <Routes>
-              <Route path="/" element={
-                <Home 
-                  searchResults={searchResults} 
-                  trendingRefs={trendingRefs}
-                  scrollContent={scrollContent}
-                />
-              } />
-              <Route path="/movies" element={<Movies searchResults={searchResults} />} />
-              <Route path="/tv" element={<TVShows searchResults={searchResults} />} />
-              <Route path="/anime" element={<Anime searchResults={searchResults} />} />
-              <Route path="/:type/:id" element={<Details />} />
-            </Routes>
-          </div>
-          <Chatbot onSuggestion={handleChatbotSuggestion} />
+          <Routes>
+            <Route path="/" element={
+              <Home 
+                searchResults={searchResults} 
+                trendingRefs={trendingRefs}
+                scrollContent={scrollContent}
+              />
+            } />
+            <Route path="/movies" element={<Movies searchResults={searchResults} />} />
+            <Route path="/tv" element={<TVShows searchResults={searchResults} />} />
+            <Route path="/anime" element={<Anime searchResults={searchResults} />} />
+            <Route path="/:type/:id" element={<Details />} />
+          </Routes>
         </div>
       </div>
     </Router>
