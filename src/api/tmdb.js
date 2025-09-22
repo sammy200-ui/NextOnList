@@ -1,36 +1,37 @@
-const TMDB_BASE_URL = 'https://api.themoviedb.org/3';
-const BEARER_TOKEN = import.meta.env.VITE_TMDB_BEARER_TOKEN;
+const API_BASE = 'https://api.themoviedb.org/3';
+const TOKEN = import.meta.env.VITE_TMDB_BEARER_TOKEN;
 
+// basic headers for requests
 const headers = {
-  'Authorization': `Bearer ${BEARER_TOKEN}`,
+  'Authorization': `Bearer ${TOKEN}`,
   'Content-Type': 'application/json'
 };
 
 export const searchContent = async (query, type = 'multi') => {
   try {
-    
-    const searchQuery = query.toLowerCase().trim();
-    let apiUrl = `${TMDB_BASE_URL}/search/${type}`;
-    let params = `query=${encodeURIComponent(searchQuery)}`;
+    const q = query.toLowerCase().trim();
+    let url = `${API_BASE}/search/${type}`;
+    let params = `query=${encodeURIComponent(q)}`;
 
-   
-    if (searchQuery.includes('horror')) {
-      apiUrl = `${TMDB_BASE_URL}/discover/movie`;
+    // quick genre shortcuts
+    if (q.includes('horror')) {
+      url = `${API_BASE}/discover/movie`;
       params = 'with_genres=27&sort_by=popularity.desc&include_adult=false&language=en-US&page=1';
-    } else if (searchQuery.includes('action')) {
-      apiUrl = `${TMDB_BASE_URL}/discover/movie`;
+    } else if (q.includes('action')) {
+      url = `${API_BASE}/discover/movie`;
       params = 'with_genres=28&sort_by=popularity.desc&include_adult=false&language=en-US&page=1';
-    } else if (searchQuery.includes('comedy')) {
-      apiUrl = `${TMDB_BASE_URL}/discover/movie`;
+    } else if (q.includes('comedy')) {
+      url = `${API_BASE}/discover/movie`;
       params = 'with_genres=35&sort_by=popularity.desc&include_adult=false&language=en-US&page=1';
-    } else if (searchQuery.includes('drama')) {
-      apiUrl = `${TMDB_BASE_URL}/discover/movie`;
+    } else if (q.includes('drama')) {
+      url = `${API_BASE}/discover/movie`;
       params = 'with_genres=18&sort_by=popularity.desc&include_adult=false&language=en-US&page=1';
     }
 
-    const response = await fetch(`${apiUrl}?${params}`, { headers });
-    const data = await response.json();
+    const res = await fetch(`${url}?${params}`, { headers });
+    const data = await res.json();
     
+    // add media type if missing
     if (data.results) {
       data.results = data.results.map(item => ({
         ...item,
@@ -39,40 +40,38 @@ export const searchContent = async (query, type = 'multi') => {
     }
     
     return data;
-  } catch (error) {
-    console.error('Error searching content:', error);
+  } catch (err) {
+    console.log('Search failed:', err);
     return { results: [] };
   }
 };
 
 export const getEpisodeRatings = async (showId, seasonNumber) => {
   try {
-    const response = await fetch(
-      `${TMDB_BASE_URL}/tv/${showId}/season/${seasonNumber}`,
-      { headers }
-    );
-    return await response.json();
-  } catch (error) {
-    console.error('Error fetching episode ratings:', error);
+    const res = await fetch(`${API_BASE}/tv/${showId}/season/${seasonNumber}`, { headers });
+    return await res.json();
+  } catch (err) {
+    console.log('Episode fetch failed:', err);
     return null;
   }
 };
 
 export const getTrendingContent = async () => {
   try {
-    const [movies, tvShows, anime] = await Promise.all([
-      fetch(`${TMDB_BASE_URL}/trending/movie/week`, { headers }),
-      fetch(`${TMDB_BASE_URL}/trending/tv/week`, { headers }),
-      fetch(`${TMDB_BASE_URL}/discover/tv?with_original_language=ja&sort_by=popularity.desc`, { headers })
+    // get all trending stuff at once
+    const [movies, tv, anime] = await Promise.all([
+      fetch(`${API_BASE}/trending/movie/week`, { headers }),
+      fetch(`${API_BASE}/trending/tv/week`, { headers }),
+      fetch(`${API_BASE}/discover/tv?with_original_language=ja&sort_by=popularity.desc`, { headers })
     ]);
 
     return {
       movies: (await movies.json()).results,
-      tvShows: (await tvShows.json()).results,
+      tvShows: (await tv.json()).results,
       anime: (await anime.json()).results
     };
-  } catch (error) {
-    console.error('Error fetching trending content:', error);
+  } catch (err) {
+    console.log('Trending fetch failed:', err);
     return { movies: [], tvShows: [], anime: [] };
   }
 };
@@ -80,9 +79,9 @@ export const getTrendingContent = async () => {
 export const getMovieCategories = async () => {
   try {
     const [topRated, newReleases, upcoming] = await Promise.all([
-      fetch(`${TMDB_BASE_URL}/movie/top_rated`, { headers }),
-      fetch(`${TMDB_BASE_URL}/movie/now_playing`, { headers }),
-      fetch(`${TMDB_BASE_URL}/movie/upcoming`, { headers })
+      fetch(`${API_BASE}/movie/top_rated`, { headers }),
+      fetch(`${API_BASE}/movie/now_playing`, { headers }),
+      fetch(`${API_BASE}/movie/upcoming`, { headers })
     ]);
 
     return {
@@ -90,27 +89,27 @@ export const getMovieCategories = async () => {
       newReleases: (await newReleases.json()).results,
       upcoming: (await upcoming.json()).results
     };
-  } catch (error) {
-    console.error('Error fetching movie categories:', error);
+  } catch (err) {
+    console.log('Movie categories failed:', err);
     return { topRated: [], newReleases: [], upcoming: [] };
   }
 };
 
 export const getTVShowCategories = async () => {
   try {
-    const [topRated, basedOnTrueStory, randomShows] = await Promise.all([
-      fetch(`${TMDB_BASE_URL}/tv/top_rated`, { headers }),
-      fetch(`${TMDB_BASE_URL}/discover/tv?with_genres=99&sort_by=vote_average.desc`, { headers }),
-      fetch(`${TMDB_BASE_URL}/discover/tv?sort_by=random.desc`, { headers })
+    const [topRated, basedOnTrue, random] = await Promise.all([
+      fetch(`${API_BASE}/tv/top_rated`, { headers }),
+      fetch(`${API_BASE}/discover/tv?with_genres=99&sort_by=vote_average.desc`, { headers }),
+      fetch(`${API_BASE}/discover/tv?sort_by=random.desc`, { headers })
     ]);
 
     return {
       topRated: (await topRated.json()).results,
-      basedOnTrueStory: (await basedOnTrueStory.json()).results,
-      randomPicks: (await randomShows.json()).results
+      basedOnTrueStory: (await basedOnTrue.json()).results,
+      randomPicks: (await random.json()).results
     };
-  } catch (error) {
-    console.error('Error fetching TV show categories:', error);
+  } catch (err) {
+    console.log('TV categories failed:', err);
     return { topRated: [], basedOnTrueStory: [], randomPicks: [] };
   }
 };

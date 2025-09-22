@@ -4,30 +4,32 @@ import { useNavigate } from 'react-router-dom';
 function AnimeList({ animeList }) {
   const navigate = useNavigate();
 
+  const openAnime = (id) => {
+    // small delay to prevent double clicks
+    setTimeout(() => navigate(`/anime/${id}`), 100);
+  };
+
   return (
     <div className="content-grid">
       {animeList?.map((anime) => {
-       
+        // figure out what data we actually have
         const title = anime.title?.english || anime.title?.romaji || anime.name;
-        const description = anime.description || anime.overview;
+        const desc = anime.description || anime.overview;
         const year = anime.startDate?.year || anime.first_air_date?.split('-')[0];
-        const rating = anime.averageScore ? (anime.averageScore / 10).toFixed(1) : anime.vote_average?.toFixed(1);
-        const image = anime.coverImage?.large || 
+        const score = anime.averageScore ? (anime.averageScore / 10).toFixed(1) : anime.vote_average?.toFixed(1);
+        const img = anime.coverImage?.large || 
           (anime.poster_path ? `https://image.tmdb.org/t/p/w300${anime.poster_path}` : 'https://via.placeholder.com/300x450?text=No+Image');
-        const animeId = anime.mal_id || anime.id;
+        const id = anime.mal_id || anime.id;
         
         return (
           <div 
-            key={animeId} 
+            key={id} 
             className="anime-card"
-            onClick={() => {
-             
-              setTimeout(() => navigate(`/anime/${animeId}`), 100);
-            }}
+            onClick={() => openAnime(id)}
             style={{ cursor: 'pointer' }}
           >
             <img
-              src={image}
+              src={img}
               alt={title}
               className="anime-poster"
               onError={(e) => {
@@ -37,9 +39,9 @@ function AnimeList({ animeList }) {
             />
             <div className="card-content">
               <h3>{title}</h3>
-              <p className="description">{description}</p>
+              <p className="description">{desc}</p>
               <p>{year}</p>
-              <p className="rating">★ {rating}/10</p>
+              <p className="rating">★ {score}/10</p>
             </div>
           </div>
         );

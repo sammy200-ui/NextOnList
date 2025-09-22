@@ -4,25 +4,27 @@ import { useNavigate } from 'react-router-dom';
 function MovieList({ movies }) {
   const navigate = useNavigate();
 
+  const openMovie = (id) => navigate(`/movie/${id}`);
+
   return (
     <div className="content-grid">
-      {movies?.map((movie) => (
+      {movies?.map((m) => (
         <div 
-          key={movie.id} 
+          key={m.id} 
           className="movie-card"
-          onClick={() => navigate(`/movie/${movie.id}`)}
+          onClick={() => openMovie(m.id)}
           style={{ cursor: 'pointer' }}
         >
           <img
-            src={`https://image.tmdb.org/t/p/w300${movie.poster_path}`}
-            alt={movie.title}
+            src={`https://image.tmdb.org/t/p/w300${m.poster_path}`}
+            alt={m.title}
             className="movie-poster"
           />
           <div className="card-content">
-            <h3>{movie.title}</h3>
-            <p className="description">{movie.overview}</p>
-            <p>{movie.release_date?.split('-')[0]}</p>
-            <p className="rating">★ {movie.vote_average?.toFixed(1)}/10</p>
+            <h3>{m.title}</h3>
+            <p className="description">{m.overview}</p>
+            <p>{m.release_date?.split('-')[0]}</p>
+            <p className="rating">★ {m.vote_average?.toFixed(1)}/10</p>
           </div>
         </div>
       ))}

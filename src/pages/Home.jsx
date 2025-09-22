@@ -2,34 +2,34 @@ import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { getTrendingContent } from '../api/tmdb';
 
-function Home({ searchResults, trendingRefs, scrollContent }) {
+function Home({ searchResults, trendingRefs }) {
   const navigate = useNavigate();
-  const [trending, setTrending] = useState({ movies: [], tvShows: [], anime: [] });
+  const [data, setData] = useState({ movies: [], tvShows: [], anime: [] });
   const [loading, setLoading] = useState(true);
 
-  const fetchTrending = async () => {
+  const loadTrending = async () => {
     try {
-      const data = await getTrendingContent();
-      setTrending(data);
-    } catch (error) {
-      console.error('Error fetching trending content:', error);
+      const result = await getTrendingContent();
+      setData(result);
+    } catch (err) {
+      console.log('Failed to load trending:', err);
     } finally {
       setLoading(false);
     }
   };
 
   useEffect(() => {
-    fetchTrending();
+    loadTrending();
    
-    const refreshInterval = setInterval(fetchTrending, 30 * 60 * 1000);
-
-    return () => clearInterval(refreshInterval);
+    // refresh every 30 mins
+    const timer = setInterval(loadTrending, 30 * 60 * 1000);
+    return () => clearInterval(timer);
   }, []);
 
-  
+  // show search results if we have any
   if (searchResults?.length > 0) {
     const movies = searchResults.filter(item => item.media_type === 'movie');
-    const tvShows = searchResults.filter(item => item.media_type === 'tv');
+    const shows = searchResults.filter(item => item.media_type === 'tv');
     const anime = searchResults.filter(item => item.media_type === 'tv' && item.original_language === 'ja');
   
     return (
@@ -64,11 +64,11 @@ function Home({ searchResults, trendingRefs, scrollContent }) {
             </div>
           )}
   
-          {tvShows.length > 0 && (
+          {shows.length > 0 && (
             <div className="trending-section">
               <h3>TV Shows</h3>
               <div className="content-grid">
-                {tvShows.map((show) => (
+                {shows.map((show) => (
                   <div 
                     key={show.id} 
                     className="show-card"
@@ -135,7 +135,7 @@ function Home({ searchResults, trendingRefs, scrollContent }) {
           <div className="trending-section">
             <h3>Trending Movies</h3>
             <div className="content-grid" ref={trendingRefs.movies}>
-              {trending.movies.map((movie) => (
+              {data.movies.map((movie) => (
                 <div 
                   key={movie.id} 
                   className="movie-card"
@@ -161,7 +161,7 @@ function Home({ searchResults, trendingRefs, scrollContent }) {
           <div className="trending-section">
             <h3>Trending TV Shows</h3>
             <div className="content-grid" ref={trendingRefs.tv}>
-              {trending.tvShows.map((show) => (
+              {data.tvShows.map((show) => (
                 <div 
                   key={show.id} 
                   className="show-card"
@@ -187,7 +187,7 @@ function Home({ searchResults, trendingRefs, scrollContent }) {
           <div className="trending-section">
             <h3>Trending Anime</h3>
             <div className="content-grid" ref={trendingRefs.anime}>
-              {trending.anime.map((anime) => (
+              {data.anime.map((anime) => (
                 <div 
                   key={anime.id} 
                   className="anime-card"
